@@ -1,0 +1,21 @@
+name: Daily Pre‑Work Reminder
+
+on:
+  schedule:
+    - cron:  '0 0 * * *'      # every day at 00:00 UTC :contentReference[oaicite:7]{index=7}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install requests icalendar apscheduler
+      - name: Run bot
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python bot.py
