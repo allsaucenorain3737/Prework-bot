@@ -34,7 +34,7 @@ def send_discord(msg: str):
 
 def main():
     # Shift “today” back one so that UTC scheduling aligns with PST intent
-    today    = datetime.utcnow().date() - timedelta(days=1)
+    today    = datetime.utcnow().date()
     tomorrow = today + timedelta(days=1)
     in_three = today + timedelta(days=3)
 
