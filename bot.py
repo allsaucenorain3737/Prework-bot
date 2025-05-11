@@ -5,7 +5,7 @@ from icalendar import Calendar
 from datetime import datetime, timedelta
 
 # ─── CONFIG ───────────────────────────────────
-WEBHOOK_URL = os.getenv('DISCORD_WEBHOOK_URL')
+WEBHOOK_URLS = os.getenv('DISCORD_WEBHOOK_URL', '').split(',')
 CAL_URL     = (
     "https://bc.instructure.com/feeds/calendars/"
     "user_y0uFoVpComnaIImxxnqKFs55uHhotG5n3ozs21Ff.ics"
@@ -28,9 +28,17 @@ def fetch_events(ics_url):
     return evs
 
 def send_discord(msg: str):
-    if not WEBHOOK_URL:
-        raise RuntimeError("Missing DISCORD_WEBHOOK_URL")
-    requests.post(WEBHOOK_URL, json={"content": msg}).raise_for_status()
+    if not WEBHOOK_URLS or WEBHOOK_URLS == ['']:
+        raise RuntimeError("No DISCORD_WEBHOOK_URLS set")
+    for url in WEBHOOK_URLS:
+        url = url.strip()
+        if not url:
+            continue
+        r = requests.post(url, json={"content": msg})
+        try:
+            r.raise_for_status()
+        except Exception as e:
+            print(f"Failed to send to {url}: {e}")
 
 def main():
     # Shift “today” back one so that UTC scheduling aligns with PST intent
