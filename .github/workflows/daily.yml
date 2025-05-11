@@ -3,7 +3,7 @@ name: Daily Pre‑Work Reminder
 on:
   schedule:
     # Runs every day at 02:00 UTC → 18:00 PST
-    - cron: '0 2 * * *'
+    - cron: '0 19 * * *'
 
 jobs:
   reminder:
